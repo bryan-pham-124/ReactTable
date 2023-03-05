@@ -2,9 +2,18 @@ import logo from './logo.svg';
 import TableReact from './components/TableReact';
 import './styles/app.css';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import {v4} from 'uuid';
+
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faStar, faStarHalfStroke} from '@fortawesome/free-solid-svg-icons';
+
+import FaStar from './components/FaStar';
+import './styles/faStar.css';
+
+
+
 
 function App() {
   
@@ -12,13 +21,58 @@ function App() {
 
   const [inputSummary, setInputSummary] = useState('');
 
-  const [inputRating, setInputRating] = useState('');
+  const [inputRating, setInputRating] = useState(0);
 
   const [tableRows, setTableRows] = useState([]);
 
   const [displayError, setDisplayError] = useState(false);
 
+  const [rowCount, setRowCount] = useState(0);
 
+  const [goodRatingsCount, setGoodRatingsCount] = useState(0);
+
+  const [resetStars, setResetStars ] = useState(false);
+
+
+ 
+
+  const stars = [
+        { 
+            id: v4(),
+            highlight: false
+        },
+        { 
+            id: v4(),
+            highlight: false
+        },
+        { 
+            id: v4(),
+            highlight: false
+        },
+        { 
+            id: v4(),
+            highlight: false
+        },
+        { 
+            id: v4(),
+            highlight: false
+        }
+  ]
+
+ 
+
+  const updateRowCount = () => {
+      setRowCount(tableRows.length); 
+  }  
+
+  const updateGoodRatingsCount = () => {
+
+      let filteredRows = tableRows.filter(row => row["rating"] > 3);
+
+      setGoodRatingsCount(filteredRows.length ); 
+  }  
+
+  
   const updateInputName = (name) => {
       setInputName(name.target.value);
   }
@@ -27,21 +81,23 @@ function App() {
       setInputSummary(summary.target.value);
   }     
 
-  const updateInputRating = (rating) => {
-      setInputRating(rating.target.value);
+  const updateInputRating = (newwRating) => {
+      updateResetStars(false);
+      setInputRating( newwRating);
   }
-
 
   const deleteRow = (currentId) => {
 
-    let newArray = tableRows.filter( elm => elm['id'] !== currentId)
-    setTableRows(newArray);
+      let newArray = tableRows.filter( elm => elm['id'] !== currentId)
+      setTableRows(newArray);
+  }
 
- }
+
+
 
   const updateTable = () => {
 
-      if(inputName.trim() !== '' && inputSummary.trim() !== '' && inputRating.trim() !== ''){
+      if(inputName.trim() !== '' && inputSummary.trim() !== ''){
 
           setTableRows([...tableRows, 
                { 'id': v4(), 'name': inputName,  'summary': inputSummary, 'rating': inputRating}
@@ -50,7 +106,7 @@ function App() {
           setDisplayError(false);
           setInputName('');
           setInputSummary('');
-          setInputRating('');
+          setInputRating(0);
        
       } else {
           setDisplayError(true);
@@ -58,8 +114,30 @@ function App() {
        
   }
 
+  const updateResetStars = (status) => {
+      setResetStars(status);
+  }
+
+
+
+  
+
   useEffect(() => {
-      console.log(tableRows)
+   
+    console.log('rating is: ' + inputRating);
+    updateResetStars(false);
+
+   //storiesCounterRef(tableRows.length);
+   
+  }, [inputRating])
+
+
+  useEffect(() => {
+       updateRowCount();
+       updateGoodRatingsCount();
+       updateResetStars(true);
+        //console.log('rating is: ' + inputRating);
+      //storiesCounterRef(tableRows.length);
   }, [tableRows])
 
 
@@ -67,10 +145,17 @@ function App() {
 
     NEXT STEPS --> 
 
-        MAKE A COUNTER  
+        X MAKE A COUNTER  
             NUMBER OF TICKETS
             NUMBER OF HIGHLY RATED STORIES
                 HIGHLY RATED -> stories > 4 stars
+
+       X Make 5 star rating
+            toggle star ratings on click
+            find a way to render the stars on row
+
+
+        FIND A WAY TO RESET STARS AFTER submitting form button
 
         SORTING FILTER
             NAME 
@@ -102,16 +187,61 @@ function App() {
             </div>
             <div className="input-group">
                 <label htmlFor="name"> Rating out of 5 stars: </label>
-                <input type="text" onChange={updateInputRating} name="rating" value = {inputRating} />
+
+                {
+                    /*
+
+                        <FaStar inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        <FaStar resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+
+
+                    */
+
+                }
+                
+                <div className="star-row">
+
+                    {
+                        stars.map(star => (
+                            <FaStar  id = {star['id']} resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        ))
+                    }
+                    
+                    
+                </div>
             </div>
            </div>
            <div className="input-group-button">
                 <button onClick = {updateTable}>Submit Story</button>
            </div>
            {displayError && <div className='display-error'> You must fill in all inputs! </div>}
+
+           <div className="table-counters">
+                <div className="wrapper">
+                    <h1>Stories: </h1>
+                    <p>{rowCount}</p>
+                </div>
+                <div className="wrapper">
+                    <h1>Good Stories: </h1>
+                    <p>{goodRatingsCount}</p>
+                </div>
+           </div>
+
+ 
+
       </div>
 
+    
+
       <div className="table-wrapper">
+
           <TableReact 
                 key = {v4()} 
                 name="Short Stories Table" 
