@@ -1,0 +1,38 @@
+.table {
+    background-color: rgb(51, 51, 51);
+    color: white;
+    padding: 20px 40px;
+    width: 80vw;
+}
+
+.table-title {
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.col-titles {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0px 10vw ;
+    border-bottom: 1px solid white;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.table-rows .row {
+    margin-top: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0px 10vw ;
+    justify-items: center;
+
+}
+
+.table-rows .rows .col:not(#summary) {
+    font-weight: 200;
+     
+}
+
+ 
