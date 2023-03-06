@@ -33,29 +33,28 @@ function App() {
 
   const [resetStars, setResetStars ] = useState(false);
 
+  const [resetKey, setResetKey] = useState(v4());
 
+  const  updateResetKey = () => {
+     setResetKey((prev) => prev + 1);
+  }
  
 
-  const stars = [
+  const  stars = [
         { 
-            id: v4(),
-            highlight: false
+           
         },
         { 
-            id: v4(),
-            highlight: false
+           
         },
         { 
-            id: v4(),
-            highlight: false
+            
         },
         { 
-            id: v4(),
-            highlight: false
+            
         },
         { 
-            id: v4(),
-            highlight: false
+          
         }
   ]
 
@@ -107,6 +106,8 @@ function App() {
           setInputName('');
           setInputSummary('');
           setInputRating(0);
+
+          updateResetKey();
        
       } else {
           setDisplayError(true);
@@ -118,14 +119,14 @@ function App() {
       setResetStars(status);
   }
 
-
+ 
 
   
 
   useEffect(() => {
    
     console.log('rating is: ' + inputRating);
-    updateResetStars(false);
+     
 
    //storiesCounterRef(tableRows.length);
    
@@ -135,8 +136,8 @@ function App() {
   useEffect(() => {
        updateRowCount();
        updateGoodRatingsCount();
-       updateResetStars(true);
-        //console.log('rating is: ' + inputRating);
+     
+         //console.log('rating is: ' + inputRating);
       //storiesCounterRef(tableRows.length);
   }, [tableRows])
 
@@ -209,8 +210,8 @@ function App() {
                 <div className="star-row">
 
                     {
-                        stars.map(star => (
-                            <FaStar  id = {star['id']} resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
+                        stars.map((star, index ) => (
+                            <FaStar key={resetKey + index} id = {v4()} resetStars = {resetStars} inputRating = {inputRating} updateInputRating={updateInputRating} />
                         ))
                     }
                     

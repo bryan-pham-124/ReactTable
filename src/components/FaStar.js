@@ -7,15 +7,13 @@ import '../styles/faStar.css';
 const FaStar = ({resetStars, inputRating, updateInputRating}) => {
 
   const [toggledStar, setToggledStar] = useState(false);
-
-  const [toggleReset, setToggleReset] = useState(resetStars);
-
-  const toggleHightLight = () => {
  
+  const toggleHightLight = () => {
+    
       setToggledStar(!toggledStar);
       updateInputRating(!toggledStar ? inputRating += 1 : inputRating -= 1);
       //setToggleReset(false);
-       
+      console.log(toggledStar);
   }
 
 
